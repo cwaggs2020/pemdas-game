@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order of Operations Game</title>
+<style>
+    body { font-family: Arial, sans-serif; background-color: #f4f4f4; text-align: center; padding: 20px; }
+    .game-container { background: #fff; padding: 20px; border-radius: 8px; max-width: 500px; margin: auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h1 { color: #333; }
+    .question { font-size: 18px; margin-bottom: 15px; }
+    .options { display: flex; flex-direction: column; gap: 10px; }
+    button { padding: 10px; font-size: 16px; cursor: pointer; border: none; border-radius: 5px; background-color: #007BFF; color: white; }
+    button:hover { background-color: #0056b3; }
+    .feedback { margin-top: 15px; font-weight: bold; }
+</style>
+</head>
+<body>
+<div class="game-container">
+    <h1>Order of Operations Game</h1>
+    <div class="question" id="question">Loading question...</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+    <button onclick="nextQuestion()" style="margin-top:20px;">Next Question</button>
+</div>
+<script>
+const questions = [
+    { expression: "(3 + 2) × 5", correct: "Parentheses", options: ["Parentheses", "Multiplication", "Addition", "Exponents"] },
+    { expression: "4 + 2^3", correct: "Exponents", options: ["Addition", "Exponents", "Division", "Parentheses"] },
+    { expression: "6 ÷ 2 + 3", correct: "Division", options: ["Addition", "Division", "Multiplication", "Parentheses"] },
+    { expression: "8 - 3 + 2", correct: "Addition/Subtraction", options: ["Addition/Subtraction", "Multiplication", "Exponents", "Parentheses"] }
+];
+
+let currentQuestion = 0;
+
+function loadQuestion() {
+    const q = questions[currentQuestion];
+    document.getElementById('question').innerText = `Which step comes first in: ${q.expression}?`;
+    const optionsDiv = document.getElementById('options');
+    optionsDiv.innerHTML = '';
+    q.options.forEach(option => {
+        const btn = document.createElement('button');
+        btn.innerText = option;
+        btn.onclick = () => checkAnswer(option);
+        optionsDiv.appendChild(btn);
+    });
+    document.getElementById('feedback').innerText = '';
+}
+
+function checkAnswer(selected) {
+    const correct = questions[currentQuestion].correct;
+    if (selected === correct) {
+        document.getElementById('feedback').innerText = '✅ Correct!';
+        document.getElementById('feedback').style.color = 'green';
+    } else {
+        document.getElementById('feedback').innerText = `❌ Incorrect. Hint: Remember PEMDAS!`;
+        document.getElementById('feedback').style.color = 'red';
+    }
+}
+
+function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion >= questions.length) {
+        document.getElementById('question').innerText = 'Game Over! Great job learning PEMDAS!';
+        document.getElementById('options').innerHTML = '';
+        document.getElementById('feedback').innerText = '';
+    } else {
+        loadQuestion();
+    }
+}
+
+window.onload = loadQuestion;
+</script>
+</body>
+</html>
